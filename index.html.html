@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abeja Fast Food - المنيو</title>
+
+<style>
+:root{
+  --yellow:#fecf1f;
+  --bg:#121212;
+  --card:#1a1a1a;
+}
+
+body{
+  font-family:'Segoe UI', Tahoma, sans-serif;
+  background:var(--bg);
+  color:white;
+  margin:0;
+  padding:15px;
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+header img{
+  width:130px;
+  /* حيدنا الخلفية البيضاء والـ padding */
+  background: transparent;
+  padding: 0;
+  display:block;
+  margin:auto;
+  /* درنا ظل خفيف كيبان غير ورا اللوجو بلا ما يوسع الجناب */
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
+  transition:.3s;
+}
+
+header img:hover{
+  transform:scale(1.05);
+}
+
+header h1{
+  color:var(--yellow);
+  margin:10px 0 0;
+  text-transform: uppercase;
+}
+
+header p{
+  opacity:.7;
+}
+
+/* CATEGORY */
+.category{
+  background:var(--yellow);
+  color:black;
+  padding:6px 15px;
+  border-radius:50px;
+  display:inline-block;
+  font-weight:bold;
+  margin:15px 0;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  box-shadow:0 5px 12px rgba(0,0,0,.4);
+  transition:.2s;
+}
+
+.card:hover{
+  transform:scale(1.02);
+}
+
+.info h3{
+  margin:0;
+}
+
+.info p{
+  margin:5px 0 0;
+  font-size:13px;
+  color:#aaa;
+}
+
+.price{
+  color:var(--yellow);
+  font-weight:bold;
+  font-size: 1.1em;
+}
+
+/* BUTTON */
+.btn{
+  background:var(--yellow);
+  border:none;
+  padding:8px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  transition: 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.9);
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  z-index: 100;
+}
+
+.box{
+  background:var(--card);
+  max-width:400px;
+  margin:20% auto;
+  padding:25px;
+  border-radius:15px;
+  border:2px solid var(--yellow);
+}
+
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  background:#333;
+  border:none;
+  color:white;
+  border-radius:8px;
+  box-sizing: border-box;
+}
+
+.wa{
+  display:block;
+  text-align:center;
+  background:#25d366;
+  padding:12px;
+  border-radius:8px;
+  text-decoration:none;
+  color:white;
+  font-weight:bold;
+  margin-top: 10px;
+}
+
+.close{
+  text-align:center;
+  margin-top:15px;
+  cursor:pointer;
+  opacity:.7;
+  text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="https://i.ibb.co/JW0fD7mz/FBBA638-F-3652-4-B73-BE45-E407-F90-D18-C7.png" alt="logo">
+<h1>ABEJA FAST FOOD 🐝</h1>
+<p>نحلتنا كتجيب ليك أسرع ماكلة! 🏎️</p>
+</header>
+
+<div class="category">🍔 البرجر</div>
+
+<div class="card">
+<div class="info">
+<h3>برجر ميكس</h3>
+<p>دجاج، كفتة، جبن، صوص خاص</p>
+</div>
+<div class="price">45 DH</div>
+<button class="btn" onclick="openOrder('برجر ميكس')">طلب</button>
+</div>
+
+<div class="card">
+<div class="info">
+<h3>برجر دجاج كريسبي</h3>
+<p>دجاج مقرمش، سلطة، جبن</p>
+</div>
+<div class="price">38 DH</div>
+<button class="btn" onclick="openOrder('برجر دجاج كريسبي')">طلب</button>
+</div>
+
+<div class="category">🌯 الطاكوس</div>
+
+<div class="card">
+<div class="info">
+<h3>طاكوس كفتة</h3>
+<p>كفتة، فريت، صوص جبن</p>
+</div>
+<div class="price">35 DH</div>
+<button class="btn" onclick="openOrder('طاكوس كفتة')">طلب</button>
+</div>
+
+<div id="modal" class="modal">
+<div class="box">
+
+<h3 id="title" style="color:var(--yellow); margin-top:0;"></h3>
+
+<input id="name" placeholder="الإسم الكامل">
+<input id="addr" placeholder="العنوان (الحي، رقم الدار...)">
+<textarea id="note" placeholder="ملاحظات (مثال: بلاش بصل، كثر صوص...)"></textarea>
+
+<a id="wa" class="wa" href="#">تأكيد عبر واتساب ✅</a>
+
+<div class="close" onclick="closeModal()">رجوع للمنيو</div>
+
+</div>
+</div>
+
+<script>
+let item="";
+// النمرة ديالهم الحقيقية ديرها هنا (مثلا 212600000000)
+const phone="2126XXXXXXXX"; 
+
+function openOrder(n){
+  item=n;
+  document.getElementById("title").innerText="طلب: "+n;
+  document.getElementById("modal").style.display="block";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+document.getElementById("wa").onclick=function(e){
+  let n=document.getElementById("name").value;
+  let a=document.getElementById("addr").value;
+  let note=document.getElementById("note").value;
+
+  if(!n || !a){
+    alert("عمر الإسم والعنوان باش يكمل الطلب!");
+    e.preventDefault();
+    return;
+  }
+
+  let msg=`*طلب جديد من ABEJA FAST FOOD*%0A🍔 *الوجبة:* ${item}%0A👤 *الإسم:* ${n}%0A📍 *العنوان:* ${a}%0A📝 *ملاحظة:* ${note}`;
+  this.href=`https://wa.me/${phone}?text=${msg}`;
+}
+
+// سد المودال إلا كليكا برا الصندوق
+window.onclick = function(event) {
+    if (event.target == document.getElementById('modal')) {
+        closeModal();
+    }
+}
+</script>
+
+</body>
+</html>
